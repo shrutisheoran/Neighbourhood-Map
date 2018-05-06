@@ -1,0 +1,32 @@
+#map {
+	bottom: 0px;
+	height: 100%;
+	left: 0px;
+	position: absolute;
+	right: 0px;
+	z-index: 1;
+}
+.menu-overwrite {
+	margin-top: 0 !important;
+	position: relative;
+	z-index: 4;
+	max-height: 80vh;
+	overflow-y: auto;
+}
+#search-button, #filter-button {
+	margin-top: 3.5vh;
+}
+.fa-bars {
+	margin-top: 50px;
+	float: right;
+	margin-right: 15px;
+	position: relative;
+	z-index: 2;
+}
+.fa-map-marker-alt {
+	position: relative;
+	z-index: 3;
+	float: right;
+	margin-right: -24px;
+	margin-top: 90px;
+}

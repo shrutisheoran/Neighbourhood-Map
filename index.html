@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="http://semantic-ui.com/dist/semantic.min.css" rel="stylesheet" type="text/css">
+	<link href="https://use.fontawesome.com/releases/v5.0.11/css/all.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet" type="text/css">
+	<title>Neighbourhood Map</title>
+</head>
+<body>
+	<div class="container">
+		<div class="ui inline cookie nag">
+			<div class="ui form">
+				<div class="three fields">
+					<div class="field">
+						<label></label>
+						<h3><label>Location</label></h3><input data-bind="value: site" id="location" placeholder="location" type="text">
+					</div>
+					<div class="field">
+						<button class="ui primary button" data-bind="click: callmarkers" id="search-button">Search</button>
+					</div>
+					<div class="field">
+						<label></label>
+						<h3><label>Place</label></h3><select class="ui fluid search dropdown" data-bind="selectedOptions: place" id="place" multiple>
+							<option value="">
+								place
+							</option>
+							<option selected value="restaurant">
+								Restaurant
+							</option>
+							<option selected value="cafe">
+								Cafe
+							</option>
+							<option selected value="hospital">
+								Hospital
+							</option>
+							<option selected value="supermarket">
+								Supermarket
+							</option>
+							<option selected value="bakery">
+								Bakery
+							</option>
+						</select>
+					</div>
+					<div class="field">
+						<button class="ui primary button" data-bind="click: filterMarkers" id="filter-button">Filter</button>
+					</div>
+				</div>
+			</div><i class="close icon"></i>
+		</div><i class="fas fa-bars fa-2x"></i> <i class="fas fa-map-marker-alt search-loc fa-2x"></i>
+		<div id="map"></div>
+		<div class="ui inverted vertical menu menu-overwrite">
+			<div class="item" data-bind="foreach: markerList">
+				<button class='ui inverted teal basic button' data-bind='text: title, click: $parent.markerAnimate'></button>
+			</div>
+		</div>
+	</div>
+	<script src="js/lib/jquery.min.js">
+	</script> 
+	<script src="http://semantic-ui.com/dist/semantic.min.js">
+	</script> 
+	<script src="js/lib/knockout-3.2.0.js">
+	</script> 
+	<script src="js/app.js">
+	</script> 
+	<script src="js/styles.js">
+	</script> 
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvkzh-9OxlVqsQrxRhcvsmFjx6hr3QC8c&libraries=geometry,geocoder,places&v=3&callback=initMap">
+	</script>
+</body>
+</html>
