@@ -16,4 +16,5 @@
 2. **_Hamburger Icon_** (Toggle Button)
   * On clicking this button a list of places appears in a menu.
   * On clicking any of the list element the respective marker starts bouncing and its infowindow opens up.
+  * Also it contains a link to wikipedia article on the city you searched.
 
