@@ -277,7 +277,8 @@ var viewModel = function() {
           type.splice(i, 1);
         } else i++;
       }
-    } else {
+    }
+    if(self.place().length >= temp){
       for (var i = 0; i < self.place().length; i++) {
         flag = 1;
         for (var j = 0; j < type.length; j++) {
