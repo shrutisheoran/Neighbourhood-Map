@@ -8,7 +8,9 @@
 **_Screenshot Of `index.html`_**
 ![Screenshot](https://github.com/shrutisheoran/Neighbourhood-Map/blob/master/img/screenshot.png "index.html")
 
-> The above map contains two icons on the right 
+> The map uses Foursquare API to find nearby locations(cafe, food, library, park, hosipital). 
+---
+> The map contains two icons on the right 
 1. **_Marker Icon_** (Toggle Button)
   * On clicking this icon one input box with search button and a dropdown with filter button appears in a window.
   * Input box takes in a address(city) example London etc.
