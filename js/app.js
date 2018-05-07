@@ -2,7 +2,7 @@ var map, marker;
 var count = 0;
 var markers = [];
 var temp = 5;
-var type = ['restaurant', 'cafe', 'hospital', 'supermarket', 'bakery'];
+var type = ['food', 'cafe', 'hospital', 'library', 'park'];
 var infoWindow, geocoder, service;
 var wikiURL, wikiElem;
 /***************************************************** 
@@ -37,35 +37,27 @@ function wiki(loc) {
   the following function is called for the last type in
   the type array defined above.
 ********************************************************/
-function createMarkers(places) {
+function createMarkers(result) {
+  places = result.response.groups[0].items;
   for (var i = 0; i < places.length; i++) {
-    var loc = places[i].geometry.location.toString();
-    var locarray = loc.split('(')[1].split(',');
-    var latitiude = parseFloat(locarray[0]);
-    var longitude = parseFloat(locarray[1].split(')')[0]);
     var pos = {
-      lat: latitiude,
-      lng: longitude
+      lat: places[i].venue.location.lat,
+      lng: places[i].venue.location.lng
     };
     var rating = 0;
     if (places[i].rating) rating = places[i].rating;
     var photo;
-    if (places[i].photos) {
-      photo = places[i].photos[0].getUrl({
-        'maxWidth': 300,
-        'maxHeight': 200
-      })
-    } else {
-      photo = 'http://www.tea-tron.com/antorodriguez/blog/wp-content/uploads/2016/04/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png'
-    }
+    photo = 'http://www.tea-tron.com/antorodriguez/blog/wp-content/uploads/2016/04/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png';
     marker = new google.maps.Marker({
       position: pos,
-      title: places[i].name,
+      title: places[i].venue.name,
       animation: google.maps.Animation.DROP,
       id: markers.length,
       picture: photo,
-      rating: rating,
-      type: places[i].types
+      address:  places[i].venue.location.address,
+      rating: places[i].venue.rating,
+      type: [result.response.query],
+      category: places[i].venue.categories[0].name
     });
     markers.push(marker);
     marker.addListener('click', function() {
@@ -144,25 +136,27 @@ function initMap() {
 }
 /**************************************************
   This function takes in latitude and longitude and 
-  a type array and perform client side request to
-  places api and the calllback function calls 
-  createMarkers function and pass inthe result of
+  a type array and perform ajax request to
+  foursquare api and the success function calls 
+  createMarkers function and pass in the result of
   the request. If request fails user is notified.
 **************************************************/
 function findPlaces(loc, type) {
   for (var i = 0; i < type.length; i++) {
-    var request = {
-      location: loc,
-      radius: 3500,
-      type: ['' + type[i] + '']
-    };
-    service.nearbySearch(request, callback);
-
-    function callback(results, status) {
-      if (status == google.maps.places.PlacesServiceStatus.OK) {
-        createMarkers(results);
-      } else alert('Places API request was not successful for the following reason: ' + status);
-    }
+    var clientId ="3VU3JPF4MALSI0PRWMV1VEVPWXO0HXACAEJDDNSB5GDHH0ZG";
+    var clientSecret = "YSBYZX0VSOEQO45P2D0MDM5OHKDFWKGSBUZ0JJXDK4S2W0AZ&v=20170801";
+    var foursquareUrl = "https://api.foursquare.com/v2/venues/explore?limit=5&range=5000&ll="+loc.lat+","+loc.lng+"&client_id="+clientId+"&client_secret="+clientSecret+"&query="+type[i];
+    $.ajax({
+      url: foursquareUrl,
+      method: 'GET',
+      dataType: 'json',
+      data: { 'place': type[i] },
+      success: function(result) {
+        createMarkers(result);
+      }
+    }).fail(function(jqXHR, textStatus) {
+      alert("Foursquare api request request was not successful because of "+ textStatus);
+    });
   }
 }
 /********************************************
@@ -203,7 +197,7 @@ function populateInfoWindow(marker, infoWindow) {
     infoWindow.addListener('closeclick', function() {
       infoWindow.setMarker = null;
     });
-    infoWindow.setContent('<div class="ui card">' + '<div>' + '<img src=' + marker.picture + ' width="250px" height="150px">' + '</div>' + '<div class="content">' + '<a class="header">' + marker.title + '</a>' + '<div class="meta">' + marker.type[0].toString() + ', ' + marker.type[1].toString() + '</div>' + '<div class="description">' + 'Rating: ' + marker.rating + '/5' + '</div>' + '</div>' + '</div>');
+    infoWindow.setContent('<div class="ui card">' + '<div>' + '<img src=' + marker.picture + ' width="250px" height="150px">' + '</div>' + '<div class="content">' + '<a class="header">' + marker.title + '</a>' + '<div class="meta">' + marker.category + '</div>' + '<div class="description">' + 'Address: ' + marker.address + '</div>' + '</div>' + '<div class="extra content">' + 'Rating: ' + marker.rating + '/10' + '</div>'+'</div>');
     infoWindow.open(map, marker);
   }
 }
@@ -224,7 +218,7 @@ var markerInfo = function(data) {
 var viewModel = function() {
   var self = this;
   self.site = ko.observable("Newyork");
-  self.place = ko.observableArray(['restaurant', 'supermarket', 'hospital', 'bakery', 'cafe']);
+  self.place = ko.observableArray(['food', 'cafe', 'hospital', 'library', 'park']);
   self.markerList = ko.observableArray([]);
   /**********************************************
     This function is called on the click on the
@@ -232,7 +226,7 @@ var viewModel = function() {
     location function by passing in the location.
   ***********************************************/
   self.callmarkers = function() {
-    type = ['restaurant', 'cafe', 'hospital', 'supermarket', 'bakery'];
+    type = ['food', 'cafe', 'hospital', 'library', 'park'];
     setLocation(self.site());
   };
   /**********************************************

@@ -9,7 +9,6 @@ $('.close').click(function() {
 });
 
 function f() {
-	$('.rating').rating('disable');
 	$('.ui.menu').hide();
 	$('.ui.dropdown').dropdown();
 }
